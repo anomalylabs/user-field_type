@@ -58,7 +58,7 @@ class UserFieldType extends FieldType
      */
     public function getRelatedModel()
     {
-        return app()->make(array_get($this->config, 'related'));
+        return app()->make('Anomaly\UsersModule\User\UserModel');
     }
 
     /**
