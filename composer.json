@@ -1,14 +1,14 @@
 {
     "name": "anomaly/user-field_type",
     "type": "streams-addon",
-    "description": "An entry relation field type.",
+    "description": "A user dropdown field type.",
     "keywords": [
-        "streams-addon",
-        "user",
-        "pyrocms",
-        "laravel"
+        "streams field type",
+        "streams addon",
+        "field type"
     ],
     "homepage": "http://anomaly.is/",
+    "version": "1.0.0",
     "license": "MIT",
     "authors": [
         {
@@ -25,11 +25,5 @@
         "psr-4": {
             "Anomaly\\UserFieldType\\": "src/"
         }
-    },
-    "extra": {
-        "branch-alias": {
-            "dev-master": "1.0.x-dev"
-        }
-    },
-    "minimum-stability": "dev"
+    }
 }

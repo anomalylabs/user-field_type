@@ -1,7 +1,5 @@
 <?php namespace Anomaly\UserFieldType;
 
-use Anomaly\Streams\Platform\Model\EloquentModel;
-
 /**
  * Class UserFieldTypeOptions
  *
@@ -22,10 +20,6 @@ class UserFieldTypeOptions
     public function handle(UserFieldType $fieldType)
     {
         $model = $fieldType->getRelatedModel();
-
-        if (!$model instanceof EloquentModel) {
-            return [];
-        }
 
         $query = $model->newQuery();
 
