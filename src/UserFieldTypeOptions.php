@@ -1,6 +1,8 @@
 <?php namespace Anomaly\UserFieldType;
 
-use Anomaly\UsersModule\Role\Contract\RoleRepositoryInterface;
+use Anomaly\UserFieldType\Command\QueryWithPermission;
+use Anomaly\UserFieldType\Command\QueryWithRole;
+use Illuminate\Foundation\Bus\DispatchesCommands;
 
 /**
  * Class UserFieldTypeOptions
@@ -13,31 +15,21 @@ use Anomaly\UsersModule\Role\Contract\RoleRepositoryInterface;
 class UserFieldTypeOptions
 {
 
+    use DispatchesCommands;
+
     /**
      * Handle the options.
      *
      * @param UserFieldType $fieldType
      */
-    public function handle(UserFieldType $fieldType, RoleRepositoryInterface $roles)
+    public function handle(UserFieldType $fieldType)
     {
         $model = $fieldType->getRelatedModel();
 
         $query = $model->newQuery();
 
-        if ($role = array_get($fieldType->getConfig(), 'role')) {
-            $query->join('users_users_roles', 'users_users_roles.entry_id', '=', 'users_users.id')
-                ->where('users_users_roles.related_id', $role);
-        }
-
-        if (!$role && $permission = array_get($fieldType->getConfig(), 'permission')) {
-
-            $accessible = $roles->findByPermission($permission);
-
-            if (!$accessible->isEmpty()) {
-                $query->join('users_users_roles', 'users_users_roles.entry_id', '=', 'users_users.id')
-                    ->whereIn('users_users_roles.related_id', $accessible->lists('id'));
-            }
-        }
+        $this->dispatch(new QueryWithRole($fieldType, $query));
+        $this->dispatch(new QueryWithPermission($fieldType, $query));
 
         $fieldType->setOptions(
             array_filter(
