@@ -1,5 +1,7 @@
 <?php namespace Anomaly\UserFieldType;
 
+use Anomaly\UsersModule\Role\Contract\RoleRepositoryInterface;
+
 /**
  * Class UserFieldTypeOptions
  *
@@ -15,18 +17,36 @@ class UserFieldTypeOptions
      * Handle the options.
      *
      * @param UserFieldType $fieldType
-     * @return array
      */
-    public function handle(UserFieldType $fieldType)
+    public function handle(UserFieldType $fieldType, RoleRepositoryInterface $roles)
     {
         $model = $fieldType->getRelatedModel();
 
         $query = $model->newQuery();
 
-        return [null => trans($fieldType->getPlaceholder())] +
-        $query->get()->lists(
-            array_get($fieldType->getConfig(), 'title', $model->getTitleName()),
-            array_get($fieldType->getConfig(), 'key', $model->getKeyName())
+        if ($role = array_get($fieldType->getConfig(), 'role')) {
+            $query->join('users_users_roles', 'users_users_roles.entry_id', '=', 'users_users.id')
+                ->where('users_users_roles.related_id', $role);
+        }
+
+        if (!$role && $permission = array_get($fieldType->getConfig(), 'permission')) {
+
+            $accessible = $roles->findByPermission($permission);
+
+            if (!$accessible->isEmpty()) {
+                $query->join('users_users_roles', 'users_users_roles.entry_id', '=', 'users_users.id')
+                    ->whereIn('users_users_roles.related_id', $accessible->lists('id'));
+            }
+        }
+
+        $fieldType->setOptions(
+            array_filter(
+                [null => trans($fieldType->getPlaceholder())] +
+                $query->get()->lists(
+                    $model->getTitleName(),
+                    $model->getKeyName()
+                )
+            )
         );
     }
 }

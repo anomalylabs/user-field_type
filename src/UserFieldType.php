@@ -2,6 +2,7 @@
 
 use Anomaly\Streams\Platform\Addon\FieldType\FieldType;
 use Anomaly\Streams\Platform\Model\EloquentModel;
+use Anomaly\UserFieldType\Command\BuildOptions;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
@@ -23,11 +24,20 @@ class UserFieldType extends FieldType
     protected $inputView = 'anomaly.field_type.user::input';
 
     /**
-     * The options handler.
+     * The field type config.
      *
-     * @var string
+     * @var array
      */
-    protected $options = 'Anomaly\UserFieldType\UserFieldTypeOptions@handle';
+    protected $config = [
+        'handler' => 'Anomaly\UserFieldType\UserFieldTypeOptions@handle'
+    ];
+
+    /**
+     * The dropdown options.
+     *
+     * @var null|array
+     */
+    protected $options = null;
 
     /**
      * Get the relation.
@@ -42,16 +52,6 @@ class UserFieldType extends FieldType
     }
 
     /**
-     * Get the options.
-     *
-     * @return array
-     */
-    public function getOptions()
-    {
-        return app()->call(array_get($this->config, 'handler', $this->options), ['fieldType' => $this]);
-    }
-
-    /**
      * Get the related model.
      *
      * @return EloquentModel
@@ -62,13 +62,30 @@ class UserFieldType extends FieldType
     }
 
     /**
-     * Get the database column name.
+     * Get the dropdown options.
      *
-     * @return null|string
+     * @return array
      */
-    public function getColumnName()
+    public function getOptions()
     {
-        return parent::getColumnName() . '_id';
+        if ($this->options === null) {
+            $this->dispatch(new BuildOptions($this));
+        }
+
+        return $this->options;
+    }
+
+    /**
+     * Set the options.
+     *
+     * @param array $options
+     * @return $this
+     */
+    public function setOptions(array $options)
+    {
+        $this->options = $options;
+
+        return $this;
     }
 
     /**
@@ -79,5 +96,15 @@ class UserFieldType extends FieldType
     public function getPlaceholder()
     {
         return $this->placeholder ?: 'anomaly.field_type.user::input.placeholder';
+    }
+
+    /**
+     * Get the database column name.
+     *
+     * @return null|string
+     */
+    public function getColumnName()
+    {
+        return parent::getColumnName() . '_id';
     }
 }
