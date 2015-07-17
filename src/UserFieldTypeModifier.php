@@ -2,6 +2,7 @@
 
 use Anomaly\Streams\Platform\Addon\FieldType\FieldTypeModifier;
 use Anomaly\Streams\Platform\Model\EloquentModel;
+use Anomaly\UsersModule\User\Contract\UserInterface;
 
 /**
  * Class UserFieldTypeModifier
@@ -21,6 +22,21 @@ class UserFieldTypeModifier extends FieldTypeModifier
      * @var UserFieldType
      */
     protected $fieldType;
+
+    /**
+     * Modify the value.
+     *
+     * @param $value
+     * @return int
+     */
+    public function modify($value)
+    {
+        if ($value instanceof UserInterface) {
+            return $value->getId();
+        }
+
+        return $value;
+    }
 
     /**
      * Restore the value.
