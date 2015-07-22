@@ -2,7 +2,7 @@
 
 use Anomaly\UserFieldType\Command\QueryWithPermission;
 use Anomaly\UserFieldType\Command\QueryWithRole;
-use Illuminate\Foundation\Bus\DispatchesCommands;
+use Illuminate\Foundation\Bus\DispatchesJobs;
 
 /**
  * Class UserFieldTypeOptions
@@ -15,7 +15,7 @@ use Illuminate\Foundation\Bus\DispatchesCommands;
 class UserFieldTypeOptions
 {
 
-    use DispatchesCommands;
+    use DispatchesJobs;
 
     /**
      * Handle the options.
@@ -37,7 +37,7 @@ class UserFieldTypeOptions
                 $query->get()->lists(
                     $model->getTitleName(),
                     $model->getKeyName()
-                )
+                )->all()
             )
         );
     }
