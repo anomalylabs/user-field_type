@@ -24,6 +24,13 @@ class UserFieldType extends FieldType
     protected $inputView = 'anomaly.field_type.user::input';
 
     /**
+     * The filter view.
+     *
+     * @var string
+     */
+    protected $filterView = 'anomaly.field_type.user::filter';
+
+    /**
      * The field type config.
      *
      * @var array
