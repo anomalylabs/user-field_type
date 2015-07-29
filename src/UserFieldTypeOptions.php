@@ -32,13 +32,10 @@ class UserFieldTypeOptions
         $this->dispatch(new QueryWithPermission($fieldType, $query));
 
         $fieldType->setOptions(
-            array_filter(
-                [null => trans($fieldType->getPlaceholder())] +
-                $query->get()->lists(
-                    $model->getTitleName(),
-                    $model->getKeyName()
-                )->all()
-            )
+            $query->get()->lists(
+                $model->getTitleName(),
+                $model->getKeyName()
+            )->all()
         );
     }
 }

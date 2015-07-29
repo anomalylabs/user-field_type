@@ -1,6 +1,7 @@
 <?php
 
 return [
-    'name'        => 'User',
-    'description' => 'A user dropdown field type.',
+    'title'       => 'User',
+    'name'        => 'User Field Type',
+    'description' => 'A user dropdown field type.'
 ];

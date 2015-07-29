@@ -79,7 +79,7 @@ class UserFieldType extends FieldType
             $this->dispatch(new BuildOptions($this));
         }
 
-        return $this->options;
+        return array_filter([null => trans($this->getPlaceholder())] + (array)$this->options);
     }
 
     /**
