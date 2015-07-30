@@ -1,4 +1,4 @@
-# URL Field Type
+# User Field Type
 
 - [Introduction](#introduction)
 - [Configuration](#configuration)
