@@ -1,5 +1,5 @@
 <?php
 
 return [
-    'placeholder' => 'Please choose a user...'
+    'placeholder' => 'Choose a user...'
 ];
